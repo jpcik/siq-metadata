@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets"
+    xmlns:rich="http://richfaces.org/rich"
+    xmlns:m="http://code.google.com/p/gmaps4jsf/" >
+  <ui:composition>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<title>Sensor Metadata Search</title>
+<style type="text/css">
+  html { height: 100% }
+  body { height: 100%; margin: 0px; padding: 0px }
+  #map_canvas { height: 100% }
+</style>
+<script src="http://maps.google.com/maps?file=api&amp;v=2&amp;key=ABQIAAAAxrVS1QxlpJHXxQ2Vxg2bJBQdkFK-tWRbPPQS4ACM1pq_e-PltxQXeyH20wQuqDaQ_6EM5UeGGVpnIw"
+		type="text/javascript"></script>
+<script type="text/javascript"
+    src="http://maps.google.com/maps/api/js?sensor=true">
+</script>
+<script type="text/javascript">
+  function initialize() {
+    var latlng = new google.maps.LatLng(46.9089975, 9.873878333333334);
+    var myOptions = {
+      zoom: 10,
+      center: latlng,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+    var map = new google.maps.Map(document.getElementById("map_canvas"),
+        myOptions);
+	var marker = new google.maps.Marker({
+      position: latlng, 
+      map: map, 
+      title:"Wannengrat thingy!"
+  }); 
+  }
+
+</script>
+</head>
+<body onload="initialize()">
+<f:view>
+
+
+
+Akisitos va la query2<br/><h:form>
+		<m:map width="500px" height="300px" latitude="41.033386"
+				longitude="-73.781755" type="G_NORMAL_MAP" zoom="14"
+				addStreetOverlay="true">
+			</m:map>
+
+		<h:inputText style="width: 66px" value="#{queryManager.bboxLat1}"></h:inputText>
+		<h:inputText style="width: 66px" value="#{queryManager.bboxLon1}"></h:inputText><br/>
+		<h:inputText style="width: 66px" value="#{queryManager.bboxLat2}"></h:inputText>
+		<h:inputText style="width: 66px" value="#{queryManager.bboxLon2}"></h:inputText><br/>
+		<h:selectOneMenu  value="#{queryManager.observedProperty}">
+			<f:selectItems value="#{queryManager.obsProperties}" var="prop"  itemLabel="#{prop.label}" itemValue="#{prop.uri}"/>
+		</h:selectOneMenu>
+		<br/>
+	
+	<h:commandButton value="send it now" action="#{queryManager.query}"/>
+</h:form>
+<br /><br />
+<h:dataTable border="1" value="#{queryManager.sensors}" var="sensor">
+	<h:column id="column1">
+		<f:facet name="header">
+			<h:outputText value="Sensor"></h:outputText>
+		</f:facet>
+		<h:outputText value="#{sensor.name}"/>
+	</h:column>
+	<h:column id="column2">
+		<f:facet name="header">
+			<h:outputText value="Station"></h:outputText>
+		</f:facet>
+		<h:outputText value="#{sensor.platform}"/>
+	</h:column>
+	<h:column id="column3">
+		<f:facet name="header">
+			<h:outputText value="Deployment"></h:outputText>
+		</f:facet>
+		<h:outputText value="#{sensor.deployment}"/>
+	</h:column>
+	<h:column id="columnLat">
+		<f:facet name="header">
+			<h:outputText value="Location"></h:outputText>
+		</f:facet>
+		<h:outputText value="#{sensor.lat}"/>
+	</h:column>
+	
+		<h:column id="column4">
+		<f:facet name="header">
+			<h:outputText value="GSN"></h:outputText>
+		</f:facet>
+		<h:outputLink value="#{sensor.gsnUrl}" >
+			<f:verbatim>Get data</f:verbatim>
+		</h:outputLink>
+	</h:column>
+	
+</h:dataTable>
+</f:view>
+<div id="map_canvas" style="width:50%; height:50%"></div>
+
+</body>
+</ui:composition>
+</html>
