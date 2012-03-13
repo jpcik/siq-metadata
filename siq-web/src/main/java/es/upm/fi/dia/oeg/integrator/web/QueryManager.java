@@ -1,8 +1,10 @@
 package es.upm.fi.dia.oeg.integrator.web;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 import javax.faces.model.SelectItem;
 
@@ -26,9 +28,11 @@ public class QueryManager
 	private QueryExecutor exe;
 	private Collection<Sensor> sensors;
 	
-	public QueryManager()
+	public QueryManager() throws IOException
 	{
-		exe = new QueryExecutor("http://localhost:8080/openrdf-workbench/repositories/owlimDemo/query");
+		Properties props = new Properties();
+		props.load(QueryManager.class.getClassLoader().getResourceAsStream("config.properties"));
+		exe = new QueryExecutor(props.getProperty("rdf.repository.url"));//"http://localhost:8080/openrdf-workbench/repositories/owlimDemo/query");
 		obsProperties = exe.queryProperties();
 	}
 	
